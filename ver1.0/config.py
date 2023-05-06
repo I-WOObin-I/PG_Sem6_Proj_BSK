@@ -1,0 +1,9 @@
+DEBUG_LOG_ON = True
+
+CTK_APPEARANCE_MODE = "dark"
+CTK_DEFAULT_COLOR_THEME = "dark-blue"
+
+PADDING_Y = 10
+PADDING_X = 10
+
+TEXT_FONT = ("Courier", 24)
