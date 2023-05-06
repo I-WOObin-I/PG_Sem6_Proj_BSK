@@ -2,6 +2,7 @@ import tkinter as tk
 import customtkinter as ctk
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
+
 from gui_frames.gui_frame import GuiFrame
 from user_data_manager import UserDataManager
 

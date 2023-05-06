@@ -1,7 +1,8 @@
 import customtkinter as ctk
+
+
 from gui_frames.gui_frame import GuiFrame
 from gui_frames.gui_key_generator_frame import KeyGeneratorFrame
-import config
 from gui_frames.gui_main_menu_frame import MainMenuFrame
 from user_data_manager import UserDataManager
 

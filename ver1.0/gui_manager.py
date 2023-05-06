@@ -1,7 +1,9 @@
 import customtkinter as ctk
+
+import config
+
 from gui_frames.gui_frame import GuiFrame
 from gui_frames import frames_list
-import config
 from user_data_manager import UserDataManager
 
 

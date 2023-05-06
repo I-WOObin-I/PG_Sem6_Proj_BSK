@@ -16,10 +16,10 @@
     - a frame to display the conversation under the title label (seperate frame in this file):
 '''
 
+import customtkinter as ctk
 from cryptography.hazmat.primitives import serialization
 
 from gui_frames.gui_frame import GuiFrame
-import customtkinter as ctk
 from user_data_manager import UserDataManager
 from gui_frames.gui_key_generator_frame import KeyGeneratorFrame
 
