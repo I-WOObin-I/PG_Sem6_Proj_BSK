@@ -1,11 +1,14 @@
-import customtkinter as ctk
+import hashlib
 
+import customtkinter as ctk
+from tkinter import messagebox
 
 from gui_frames.gui_frame import GuiFrame
 from gui_frames.gui_key_generator_frame import KeyGeneratorFrame
 from gui_frames.gui_main_menu_frame import MainMenuFrame
 from gui_frames.gui_new_profile import NewProfileFrame
 from user_data_manager import UserDataManager
+from file_manager import FileManager
 
 PACK_EXPAND = False
 PACK_ANCHOR = ctk.CENTER
@@ -62,10 +65,17 @@ class LoginFrame(GuiFrame):
         self.parent.show_frame(KeyGeneratorFrame)
 
     def login(self):
-        self.user_data_manager.set_username(self.login_CTkEntry.get())
-        self.user_data_manager.set_password(self.password_CTkEntry.get())
-        self.parent.show_frame(MainMenuFrame)
-
+        username = self.login_CTkEntry.get()
+        password = self.password_CTkEntry.get()
+        password_hash = hashlib.sha256(password.encode()).hexdigest()
+        file_manager = FileManager()
+        if file_manager.validate_user(username, password_hash):
+            self.user_data_manager.set_username(self.login_CTkEntry.get())
+            self.user_data_manager.set_password(self.password_CTkEntry.get())
+            self.parent.show_frame(MainMenuFrame)
+        else:
+            print("Wrong password")
+            messagebox.showerror("Error", "Wrong password or username")
     def create_new_profile(self):
         self.parent.show_frame(NewProfileFrame)
 
