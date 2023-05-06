@@ -12,8 +12,7 @@ CTkLabel_LENGTH = 60
 
 class KeyGeneratorFrame(GuiFrame):
     def __init__(self, parent, callback):
-        #super().__init__(parent, callback)
-        super().__init__(parent)
+        super().__init__(parent, callback)
 
         self.parent = parent
 

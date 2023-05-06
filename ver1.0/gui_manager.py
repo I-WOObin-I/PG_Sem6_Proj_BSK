@@ -27,6 +27,7 @@ class GuiManager(ctk.CTk):
         try:
             self.frame_stack[-1].pack_forget()
             self.frame_stack.pop()
+            self.frame_stack[-1].pack(fill="both", expand=True)
             self.frame_stack[-1].tkraise()
 
         except IndexError:
@@ -34,7 +35,6 @@ class GuiManager(ctk.CTk):
                 print("# ERR # gui_manager.show_frame: only one frame on stack")
 
     def show_frame(self, frame_class_ref: GuiFrame):
-        #new_frame = frame_class_ref(self, self.go_back)
 
         new_frame = frame_class_ref.__new__(frame_class_ref)
         new_frame.__init__(self, self.go_back)

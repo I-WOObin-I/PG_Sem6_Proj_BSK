@@ -10,8 +10,7 @@ from gui_frames.gui_key_generator_frame import KeyGeneratorFrame
 
 class LoginFrame(GuiFrame):
     def __init__(self, parent, callback):
-        #super().__init__(parent, callback)
-        super().__init__(parent)
+        super().__init__(parent, callback)
 
         self.parent = parent
 
