@@ -15,6 +15,8 @@ class KeyGeneratorFrame(GuiFrame):
         #super().__init__(parent, callback)
         super().__init__(parent)
 
+        self.parent = parent
+
         # Create a CTkLabel for the key size prompt
         key_size_prompt = ctk.CTkLabel(self, text="Key Size (in bits):")
         key_size_prompt.pack()

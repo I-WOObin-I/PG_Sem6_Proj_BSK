@@ -5,12 +5,15 @@ from customtkinter import filedialog
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 from gui_frames.gui_frame import GuiFrame
+from gui_frames.gui_key_generator_frame import KeyGeneratorFrame
 
 
 class LoginFrame(GuiFrame):
     def __init__(self, parent, callback):
         #super().__init__(parent, callback)
         super().__init__(parent)
+
+        self.parent = parent
 
         # Create a CTkLabel for the login prompt
         self.login_prompt = ctk.CTkLabel(self, text="Login:")
@@ -86,7 +89,7 @@ class LoginFrame(GuiFrame):
         self.private_key_CTkLabel.config(text="Private Key: " + str(private_key))
 
     def frame_go_to_keyGeneratorFrame(self):
-        self.parent.show_KeyGeneratorFrame(lambda :self.parent.show_loginFrame(self.callback))
+        self.parent.show_frame(KeyGeneratorFrame)
 
 
 if __name__ == "__main__":

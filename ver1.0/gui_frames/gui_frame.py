@@ -12,4 +12,6 @@ class GuiFrame(ctk.CTkFrame):
         self.callback = callback
 
     def go_back(self):
+        print("go_back")
+        print(self.callback)
         self.callback()
