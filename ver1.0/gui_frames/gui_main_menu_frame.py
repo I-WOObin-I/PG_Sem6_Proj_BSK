@@ -15,7 +15,6 @@
     - a title label on top
     - a frame to display the conversation under the title label (seperate frame in this file):
 '''
-from tkinter import filedialog
 
 from cryptography.hazmat.primitives import serialization
 
@@ -108,14 +107,14 @@ class LeftMenuFrame(ctk.CTkFrame):
 
     # method to uploade public key
     def upload_public_key(self):
-        file_path = filedialog.askopenfilename(title="Select Public Key File")
+        file_path = ctk.filedialog.askopenfilename(title="Select Public Key File")
         with open(file_path, "rb") as key_file:
             public_key = serialization.load_pem_public_key(key_file.read())
         self.public_key_fingerprint_label.config(text="Public Key: " + str(public_key))
 
     # method to upload private key
     def upload_private_key(self):
-        file_path = filedialog.askopenfilename(title="Select Private Key File")
+        file_path = ctk.filedialog.askopenfilename(title="Select Private Key File")
         with open(file_path, "rb") as key_file:
             private_key = serialization.load_pem_private_key(
                 key_file.read(),

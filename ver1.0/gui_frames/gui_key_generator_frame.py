@@ -1,6 +1,5 @@
 import tkinter as tk
 import customtkinter as ctk
-from customtkinter import filedialog
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 from gui_frames.gui_frame import GuiFrame
@@ -86,7 +85,7 @@ class KeyGeneratorFrame(GuiFrame):
 
     def save_public_key(self):
         # Get the file path to save the public key
-        file_path = filedialog.asksaveasfilename(title="Save Public Key As", defaultextension=".pem")
+        file_path = ctk.filedialog.asksaveasfilename(title="Save Public Key As", defaultextension=".pem")
 
         # Write the public key to the file
         with open(file_path, "wb") as key_file:
@@ -94,7 +93,7 @@ class KeyGeneratorFrame(GuiFrame):
 
     def save_private_key(self):
         # Get the file path to save the private key
-        file_path = filedialog.asksaveasfilename(title="Save Private Key As", defaultextension=".pem")
+        file_path = ctk.filedialog.asksaveasfilename(title="Save Private Key As", defaultextension=".pem")
 
         # Write the private key to the file
         with open(file_path, "wb") as key_file:
