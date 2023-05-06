@@ -3,16 +3,18 @@ from gui_frames.gui_frame import GuiFrame
 from gui_frames.gui_key_generator_frame import KeyGeneratorFrame
 import config
 from gui_frames.gui_main_menu_frame import MainMenuFrame
+from user_data_manager import UserDataManager
 
 PACK_EXPAND = False
 PACK_ANCHOR = ctk.CENTER
 
 
 class LoginFrame(GuiFrame):
-    def __init__(self, parent, callback):
+    def __init__(self, parent, callback, user_data_manager: UserDataManager):
         super().__init__(parent, callback)
 
         self.parent = parent
+        self.user_data_manager = user_data_manager
 
         # Create a CTkLabel for the login prompt
         self.login_prompt = ctk.CTkLabel(self, text="Login:")
@@ -54,6 +56,8 @@ class LoginFrame(GuiFrame):
         self.parent.show_frame(KeyGeneratorFrame)
 
     def login(self):
+        self.user_data_manager.set_username(self.login_CTkEntry.get())
+        self.user_data_manager.set_password(self.password_CTkEntry.get())
         self.parent.show_frame(MainMenuFrame)
 
 if __name__ == "__main__":

@@ -21,7 +21,7 @@ from cryptography.hazmat.primitives import serialization
 
 from gui_frames.gui_frame import GuiFrame
 import customtkinter as ctk
-
+from user_data_manager import UserDataManager
 from gui_frames.gui_key_generator_frame import KeyGeneratorFrame
 
 LEFT_COLUMN_WIDTH = 100
@@ -34,10 +34,11 @@ FRAMES_PADX = 3
 FRAMES_PADY = 3
 
 class MainMenuFrame(GuiFrame):
-    def __init__(self, parent, callback):
+    def __init__(self, parent, callback, user_data_manager: UserDataManager):
         super().__init__(parent, callback)
 
         self.parent = parent
+        self.user_data_manager = user_data_manager
         self.pack(fill="both", expand=True)
 
 
@@ -68,7 +69,8 @@ class LeftMenuFrame(ctk.CTkFrame):
         self.configure(fg_color=LEFT_COLUMN_COLOR)
 
         # Create username label
-        self.username_label = ctk.CTkLabel(self, text="Username")
+        username = self.parent.user_data_manager.get_username()
+        self.username_label = ctk.CTkLabel(self, text=username)
         self.username_label.pack(fill="x")
 
         # Create key length label

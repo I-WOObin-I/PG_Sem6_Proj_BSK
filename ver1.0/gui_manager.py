@@ -2,7 +2,7 @@ import customtkinter as ctk
 from gui_frames.gui_frame import GuiFrame
 from gui_frames import frames_list
 import config
-
+from user_data_manager import UserDataManager
 
 
 class GuiManager(ctk.CTk):
@@ -16,6 +16,8 @@ class GuiManager(ctk.CTk):
         self.geometry("800x600")
 
         self.frame_stack = []
+
+        self.user_data_manager = UserDataManager()
 
         #self.frames_list = frames_list.FRAMES_LIST
 
@@ -35,7 +37,7 @@ class GuiManager(ctk.CTk):
     def show_frame(self, frame_class_ref: GuiFrame):
 
         new_frame = frame_class_ref.__new__(frame_class_ref)
-        new_frame.__init__(self, self.go_back)
+        new_frame.__init__(self, self.go_back, self.user_data_manager)
 
         if len(self.frame_stack) != 0:
             self.frame_stack[-1].pack_forget()

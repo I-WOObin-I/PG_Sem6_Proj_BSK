@@ -4,14 +4,14 @@ from customtkinter import filedialog
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 from gui_frames.gui_frame import GuiFrame
-
+from user_data_manager import UserDataManager
 
 OPTIONS = [2048, 4096, 8192]
 PUBLIC_EXPONENT = 65537
 CTkLabel_LENGTH = 60
 
 class KeyGeneratorFrame(GuiFrame):
-    def __init__(self, parent, callback):
+    def __init__(self, parent, callback, user_data_manager: UserDataManager):
         super().__init__(parent, callback)
 
         self.parent = parent
