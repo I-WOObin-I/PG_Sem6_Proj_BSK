@@ -1,8 +1,6 @@
-import abc
 
-import tkinter as tk
 import customtkinter as ctk
-
+import config
 
 class GuiFrame(ctk.CTkFrame):
 
@@ -13,3 +11,6 @@ class GuiFrame(ctk.CTkFrame):
 
     def go_back(self):
         self.callback()
+
+    def pack(self, *args, **kwargs):
+        super().pack(ipadx=config.PADX, ipady=config.PADY, *args, **kwargs)

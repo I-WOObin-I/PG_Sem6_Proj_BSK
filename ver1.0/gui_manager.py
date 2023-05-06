@@ -1,6 +1,4 @@
 import customtkinter as ctk
-from gui_frames.gui_login_frame import LoginFrame
-from gui_frames.gui_key_generator_frame import KeyGeneratorFrame
 from gui_frames.gui_frame import GuiFrame
 from gui_frames import frames_list
 import config
@@ -15,7 +13,7 @@ class GuiManager(ctk.CTk):
         self.title("Secure Foreplay")
 
         # Set the window size
-        self.geometry("600x500")
+        self.geometry("800x600")
 
         self.frame_stack = []
 
@@ -27,7 +25,7 @@ class GuiManager(ctk.CTk):
         try:
             self.frame_stack[-1].pack_forget()
             self.frame_stack.pop()
-            self.frame_stack[-1].pack(fill="both", expand=True)
+            self.frame_stack[-1].pack()
             self.frame_stack[-1].tkraise()
 
         except IndexError:
@@ -44,7 +42,7 @@ class GuiManager(ctk.CTk):
 
         self.frame_stack.append(new_frame)
 
-        new_frame.pack(fill="both", expand=True)
+        new_frame.pack()
         new_frame.tkraise()
 
     def clear_window(self):
