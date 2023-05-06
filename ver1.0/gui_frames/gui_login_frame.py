@@ -4,6 +4,7 @@ import customtkinter as ctk
 from gui_frames.gui_frame import GuiFrame
 from gui_frames.gui_key_generator_frame import KeyGeneratorFrame
 from gui_frames.gui_main_menu_frame import MainMenuFrame
+from gui_frames.gui_new_profile import NewProfileFrame
 from user_data_manager import UserDataManager
 
 PACK_EXPAND = False
@@ -41,6 +42,10 @@ class LoginFrame(GuiFrame):
         self.go_CTkButton = ctk.CTkButton(self, text="Login", command=self.login)
         self.go_CTkButton.pack()
 
+        # Create a CTkButton to create a new profile
+        self.go_CTkButton = ctk.CTkButton(self, text="Create New Profile", command=self.create_new_profile)
+        self.go_CTkButton.pack()
+
     def pack(self):
         super().pack(expand=PACK_EXPAND, anchor=PACK_ANCHOR)
 
@@ -60,6 +65,9 @@ class LoginFrame(GuiFrame):
         self.user_data_manager.set_username(self.login_CTkEntry.get())
         self.user_data_manager.set_password(self.password_CTkEntry.get())
         self.parent.show_frame(MainMenuFrame)
+
+    def create_new_profile(self):
+        self.parent.show_frame(NewProfileFrame)
 
 if __name__ == "__main__":
     root = ctk.CTk()
