@@ -8,7 +8,7 @@ from gui_frames.gui_key_generator_frame import KeyGeneratorFrame
 from gui_frames.gui_main_menu_frame import MainMenuFrame
 from gui_frames.gui_new_profile import NewProfileFrame
 from user_data_manager import UserDataManager
-from file_manager import FileManager
+from user_login_handler import UserLoginHandler
 
 PACK_EXPAND = False
 PACK_ANCHOR = ctk.CENTER
@@ -68,8 +68,8 @@ class LoginFrame(GuiFrame):
         username = self.login_CTkEntry.get()
         password = self.password_CTkEntry.get()
         password_hash = hashlib.sha256(password.encode()).hexdigest()
-        file_manager = FileManager()
-        if file_manager.validate_user(username, password_hash):
+        user_login_handler = UserLoginHandler()
+        if user_login_handler.validate_user(username, password_hash):
             self.user_data_manager.set_username(self.login_CTkEntry.get())
             self.user_data_manager.set_password(self.password_CTkEntry.get())
             self.parent.show_frame(MainMenuFrame)

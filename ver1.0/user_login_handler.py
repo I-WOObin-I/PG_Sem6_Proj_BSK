@@ -3,7 +3,7 @@ import json
 import os
 
 
-class FileManager():
+class UserLoginHandler():
     def __init__(self):
         self.file_path = "users.json"
 

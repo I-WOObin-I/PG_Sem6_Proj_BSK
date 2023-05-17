@@ -8,7 +8,7 @@ import config
 
 from gui_frames.gui_frame import GuiFrame
 from user_data_manager import UserDataManager
-from file_manager import FileManager
+from user_login_handler import UserLoginHandler
 
 PACK_EXPAND = False
 PACK_ANCHOR = ctk.CENTER
@@ -70,7 +70,7 @@ class NewProfileFrame(GuiFrame):
                 self.rep_password_CTkEntry.delete(0, ctk.END)
                 return
         else:
-            file_manager = FileManager()
+            file_manager = UserLoginHandler()
             file_manager.add_user(username, hashed_password)
 
         self.parent.go_back()
