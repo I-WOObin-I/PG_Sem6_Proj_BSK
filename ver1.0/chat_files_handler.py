@@ -1,4 +1,4 @@
-''' file with classes for retrieving data from files such as conversations, chats, config'''
+''' file with classes for retrieving and saving data to and from chat files'''
 ''' file format for all conversations is as follows (json, each chat encrypted with symetric key, one file per chat):
     "chat":
         {
@@ -33,11 +33,8 @@
     
 '''
 
-
 import json
-import os
 from cryptography.fernet import Fernet
-import hashlib
 
 class ChatFilesHandler():
     def __init__(self):
@@ -92,11 +89,12 @@ class ChatFilesHandler():
         self._encrypt_and_save_chat(chat_file_name, chat_key, chat)
 
 
-    def get_chat(self, chat_name, chat_key, username, password):
+    def get_chat(self, chat_name, username, password):
 
         user_keys = self._get_user_keys_data(username, password)
         chat_file_name = user_keys["chat_keys"][user_keys["chat_keys"].index({"chat_name": chat_name})]["chat_file_name"]
-        chat = self._get_chat_data(chat_file_name, chat_key)
+        chat_file_key = user_keys["chat_keys"][user_keys["chat_keys"].index({"chat_name": chat_name})]["chat_key"]
+        chat = self._get_chat_data(chat_file_name, chat_file_key)
 
         return chat
 
