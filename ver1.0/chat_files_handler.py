@@ -48,20 +48,8 @@ class ChatFilesHandler():
 
     def retrieve_all_chat_names(self, username, password):
 
-        # load Users json file to get proper User_Keys file name
-        with open(self.users_file_path, "r") as file:
-            users_data = json.load(file)
+        user_keys_data = self._get_user_keys_data(username, password)
 
-        # find User_Keys file name
-        user_keys_file_name = users_data["users"][users_data["users"].index({"username": username})]["keys_file_name"]
-
-        # decrypt User_Keys file
-        with open(user_keys_file_name, "rb") as file:
-            user_keys_file = file.read()
-        fernet = Fernet(password)
-        user_keys_data = json.loads(fernet.decrypt(user_keys_file).decode())
-
-        # get all chat names
         chat_names = []
         for chat in user_keys_data["chat_keys"]:
             chat_names.append(chat["chat_name"])
@@ -120,6 +108,7 @@ class ChatFilesHandler():
 
 
     ''' util functions '''
+
     def _get_user_keys_data(self, username, password):
 
         # load Users json file to get proper User_Keys file name
