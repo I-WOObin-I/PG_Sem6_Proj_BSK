@@ -40,21 +40,20 @@ from cryptography.fernet import Fernet
 import hashlib
 
 class ChatFilesHandler():
-    def __init__(self, username, password):
+    def __init__(self):
 
-        self.username = username
-        self.password = password
         self.users_file_path = "users.json"
+
 
     def retrieve_all_chat_names(self, username, password):
 
         user_keys_data = self._get_user_keys_data(username, password)
-
         chat_names = []
         for chat in user_keys_data["chat_keys"]:
             chat_names.append(chat["chat_name"])
 
         return chat_names
+
 
     def add_new_chat(self, chat_name, chat_key, new_chat_file_name, username, password):
 
@@ -69,7 +68,7 @@ class ChatFilesHandler():
         new_file_key = Fernet.generate_key()
         self._encrypt_and_save_chat(new_chat_file_name, new_file_key, chat_data)
 
-        ''' save new chat file name and key to proper User_Keys file '''
+        # save new chat file name and key to proper User_Keys file
 
         user_keys = self._get_user_keys_data(username, password)
 
@@ -86,21 +85,17 @@ class ChatFilesHandler():
     def save_chat(self, chat_name, chat_key, file_name, username, password, chat_conversation):
 
         user_keys = self._get_user_keys_data(username, password)
-
         chat_file_name = user_keys["chat_keys"][user_keys["chat_keys"].index({"chat_name": chat_name})]["chat_file_name"]
-
         chat = self._get_chat_data(chat_file_name, chat_key)
-
         chat["chat"]["chat_conversation"].append(chat_conversation)
 
         self._encrypt_and_save_chat(chat_file_name, chat_key, chat)
 
+
     def get_chat(self, chat_name, chat_key, username, password):
 
         user_keys = self._get_user_keys_data(username, password)
-
         chat_file_name = user_keys["chat_keys"][user_keys["chat_keys"].index({"chat_name": chat_name})]["chat_file_name"]
-
         chat = self._get_chat_data(chat_file_name, chat_key)
 
         return chat
@@ -136,6 +131,7 @@ class ChatFilesHandler():
         return chat_data
 
     def _encrypt_and_save_chat(self, chat_file_name, chat_file_key, chat_data):
+
         fernet = Fernet(chat_file_key)
         json_data = json.dumps(chat_data)
         encrypted_chat_file = fernet.encrypt(json_data.encode())
