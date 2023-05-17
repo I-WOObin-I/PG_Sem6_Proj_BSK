@@ -5,6 +5,7 @@ to run app you first need to setup a python enviroment with following packages:
 - import customtkinter
 - from cryptography.hazmat.primitives import serialization
 - from cryptography.hazmat.primitives.asymmetric import rsa
+- from cryptography.fernet import Fernet
 - import json
 - import os
 - from tkinter import messagebox
