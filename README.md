@@ -28,7 +28,7 @@ conversation - list of all messeges
   - chat name - name for given chat
   - chat file name - file name containing whole encrypted chat
   - chat key - key to decrypt chat file
-- <chat file>.json - file containing name, symmetric key and all messeges 
+- <chat_file>.json - file containing name, symmetric key and all messeges 
   - chat name - name for given chat
   - chat key - symmetric key used in communication over unsecured channel
   - chat conversation <dictionary list> [
