@@ -2,7 +2,7 @@ import socket
 import struct
 import threading
 
-BUFFER_SIZE_FILE = 1024
+BUFFER_SIZE_FILE = 1024*32
 
 class SocketManager:
     def __init__(self, conversation_handler, address, port, receive_callback):
@@ -86,7 +86,7 @@ class SocketManager:
         self.log("File length: " + str(mess_len))
 
         message = self.receive_callback('f', mess_len)
-        message.set_progressbar(mess_len)
+        message.set_progressbar()
         chunks = []
         bytes_recd = 0
 
@@ -96,10 +96,12 @@ class SocketManager:
                 break
 
             chunks.append(chunk)
-            message.step_progressbar(len(chunk))
+            message.set_progressbar_value(bytes_recd/mess_len)
             bytes_recd = bytes_recd + len(chunk)
 
-        message.file = ''.join(chunks)
+        self.log("File received")
+        message.file = b''.join(chunks)
+        message.finish_progressbar()
 
 
     def send_text(self, data=""):
@@ -126,10 +128,11 @@ class SocketManager:
 
         packet_type = b'f'
         packet_len = struct.pack('I', len(data))
+        self.log("File length: " + str(len(data)))
         packet = packet_type + packet_len
         self.conn.sendall(packet)
 
-        message.set_progressbar(len(data))
+        message.set_progressbar()
         total_sent = 0
 
         while total_sent < len(data):
@@ -138,7 +141,9 @@ class SocketManager:
                 raise RuntimeError("socket connection broken")
             total_sent = total_sent + sent
             # update the progress bar
-            message.step_progressbar(sent)
+            message.set_progressbar_value(sent/len(data))
+
+        message.finish_progressbar()
 
 
 

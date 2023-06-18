@@ -53,12 +53,13 @@ class Message:
             with open(file_path, 'wb') as file:
                 file.write(self.file)
 
-    def set_progressbar(self, length):
+    def set_progressbar(self):
         self.progressbar = ctk.CTkProgressBar(self.message_frame)
+        self.progressbar.set(0)
         self.progressbar.pack(fill="x")
-        self.progressbar_length = length
 
-    def step_progressbar(self, progress):
-        self.progressbar['determinate_speed'] = progress / self.progressbar_length
-        self.progressbar.step()
-        pass
+    def set_progressbar_value(self, value):
+        self.progressbar.set(value)
+
+    def finish_progressbar(self):
+        self.progressbar.destroy()
