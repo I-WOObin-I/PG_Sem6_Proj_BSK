@@ -8,8 +8,47 @@
 
 from chat_files_handler import ChatFilesHandler
 from cryptography.fernet import Fernet
+from socket_manager import SocketManager
+import threading
 
 class ConversationHandler():
+    def __init__(self, address, port, conversation_frame, chats_frame):
+        self.address = address
+        self.port = int(port)
+        self.conversation_frame = conversation_frame
+        self.chats_frame = chats_frame
+        conversation_frame.set_conversation_handler(self)
+
+        self.socket_manager = SocketManager(self, self.address, self.port, self.received)
+
+
+    def new_conversation(self):
+        self.socket_manager.listen()
+    def connect(self):
+        self.socket_manager.connect()
+
+    def send_text(self, text):
+        self.socket_manager.send_text(text)
+        self.conversation_frame.add_message('t', text, local_sender=True)
+
+    def send_file(self, file_path):
+        try:
+            with open(file_path, 'rb') as file:
+                file_data = file.read()
+                message = self.conversation_frame.add_message('f', file_data, local_sender=True)
+                self.socket_manager.send_file(file_data, message)
+        except:
+            self.log("Error sending file")
+
+
+    def received(self, message_type, data):
+        message = self.conversation_frame.add_message(message_type, data, local_sender=False)
+        return message
+
+    def log(self, text):
+        self.chats_frame.log(text)
+
+    '''
     def __init__(self, chat_name, username, password):
         self.chat_name = chat_name
         self.username = username
@@ -64,3 +103,7 @@ class ConversationHandler():
 
     def _save_conversation(self):
         self.chat_files_handler.save_chat(self.chat_name, self.username, self.password, self.encrypted_conversation_new)
+    
+    
+    
+    '''
