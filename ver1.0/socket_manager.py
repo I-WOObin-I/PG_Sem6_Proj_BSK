@@ -44,6 +44,48 @@ class SocketManager:
         self.receiving_thread = threading.Thread(target=self.thread_receive)
         self.receiving_thread.start()
 
+
+    def send_text(self, data=""):
+        send_thread = threading.Thread(target=self.thread_send_text, args=(data,))
+        send_thread.start()
+
+    def send_file(self, file, message):
+        send_thread = threading.Thread(target=self.thread_send_file, args=(file, message))
+        send_thread.start()
+
+
+    def thread_send_text(self, text):
+        self.update_conn()
+        self.log("Sending text message")
+        packet_type = b't'
+        packet_len = struct.pack('H', len(text))
+        packet_data = text.encode()
+        packet = packet_type + packet_len + packet_data
+        self.conn.sendall(packet)
+
+    def thread_send_file(self, data, message):
+        self.update_conn()
+        self.log("Sending file")
+
+        packet_type = b'f'
+        packet_len = struct.pack('I', len(data))
+        self.log("File length: " + str(len(data)))
+        packet = packet_type + packet_len
+        self.conn.sendall(packet)
+
+        message.set_progressbar()
+        total_sent = 0
+
+        while total_sent < len(data):
+            sent = self.sock.send(data[total_sent:])
+            if sent == 0:
+                raise RuntimeError("socket connection broken")
+            total_sent = total_sent + sent
+            # update the progress bar
+            message.set_progressbar_value(sent/len(data))
+
+        message.finish_progressbar()
+
     def thread_receive(self):
         self.lock.acquire()
         self.conn = self.conn
@@ -101,48 +143,6 @@ class SocketManager:
 
         self.log("File received")
         message.file = b''.join(chunks)
-        message.finish_progressbar()
-
-
-    def send_text(self, data=""):
-        send_thread = threading.Thread(target=self.thread_send_text, args=(data,))
-        send_thread.start()
-
-    def send_file(self, file, message):
-        send_thread = threading.Thread(target=self.thread_send_file, args=(file, message))
-        send_thread.start()
-
-
-    def thread_send_text(self, text):
-        self.update_conn()
-        self.log("Sending text message")
-        packet_type = b't'
-        packet_len = struct.pack('H', len(text))
-        packet_data = text.encode()
-        packet = packet_type + packet_len + packet_data
-        self.conn.sendall(packet)
-
-    def thread_send_file(self, data, message):
-        self.update_conn()
-        self.log("Sending file")
-
-        packet_type = b'f'
-        packet_len = struct.pack('I', len(data))
-        self.log("File length: " + str(len(data)))
-        packet = packet_type + packet_len
-        self.conn.sendall(packet)
-
-        message.set_progressbar()
-        total_sent = 0
-
-        while total_sent < len(data):
-            sent = self.sock.send(data[total_sent:])
-            if sent == 0:
-                raise RuntimeError("socket connection broken")
-            total_sent = total_sent + sent
-            # update the progress bar
-            message.set_progressbar_value(sent/len(data))
-
         message.finish_progressbar()
 
 

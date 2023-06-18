@@ -23,7 +23,7 @@ from gui_frames.gui_frame import GuiFrame
 from user_data_manager import UserDataManager
 from gui_frames.gui_key_generator_frame import KeyGeneratorFrame
 
-from gui_frames.hub_frames.hub_settings_frame import SettingsHubFrame
+from gui_frames.hub_frames.hub_utility_frame import SettingsHubFrame
 from gui_frames.hub_frames.hub_conversation_frame import ConversationHubFrame
 from gui_frames.hub_frames.hub_chats_frame import ChatsHubFrame
 

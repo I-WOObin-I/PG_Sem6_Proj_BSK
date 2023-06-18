@@ -5,7 +5,7 @@ from tkinter import messagebox
 
 from gui_frames.gui_frame import GuiFrame
 from gui_frames.gui_key_generator_frame import KeyGeneratorFrame
-from gui_frames.gui_main_menu_frame import MainMenuFrame
+from gui_frames.gui_hub_frame import MainMenuFrame
 from gui_frames.gui_new_profile import NewProfileFrame
 from user_data_manager import UserDataManager
 from user_login_handler import UserLoginHandler

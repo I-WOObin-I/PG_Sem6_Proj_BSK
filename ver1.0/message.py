@@ -1,3 +1,5 @@
+from io import BytesIO
+
 import customtkinter as ctk
 import config as cfg
 from PIL import Image, ImageTk
@@ -26,21 +28,22 @@ class Message:
             return message_frame
 
         elif self.type == "f":
-            message_frame = ctk.CTkFrame(parent_frame, fg_color="transparent", corner_radius=10)
-            message_button = ctk.CTkButton(message_frame, text="save file", fg_color=cfg.MESSAGE_BACKGROUND_COLOR, corner_radius=10, command=self.save_file)
-            message_button.pack()
-            self.message_frame = message_frame
-            return message_frame
-
-            # try:
-            #     with Image.open(self.file) as image:
-            #         imageTk = ctk.CTkImage(image)
-            #         message_frame = ctk.CTkFrame(parent_frame, fg_color="transparent", corner_radius=10)
-            #         message_label = ctk.CTkLabel(message_frame, fg_color=cfg.MESSAGE_BACKGROUND_COLOR, corner_radius=10, image=imageTk)
-            #         message_label.pack()
-            #         return message_frame
-            # except IOError:
-            #     # file cant be displayed as an image
+            try:
+                image_stream = BytesIO(self.file)
+                image = Image.open(image_stream)
+                imageTk = ctk.CTkImage(image, size=(200, 200))
+                message_frame = ctk.CTkFrame(parent_frame, fg_color="transparent", corner_radius=10)
+                message_label = ctk.CTkLabel(message_frame, text="", fg_color=cfg.MESSAGE_BACKGROUND_COLOR, corner_radius=10, image=imageTk, height=220)
+                message_label.pack(expand=True)
+                message_button = ctk.CTkButton(message_frame, text="save file", fg_color=cfg.MESSAGE_BACKGROUND_COLOR, corner_radius=10, command=self.save_file)
+                message_button.pack()
+                return message_frame
+            except:
+                message_frame = ctk.CTkFrame(parent_frame, fg_color="transparent", corner_radius=10)
+                message_button = ctk.CTkButton(message_frame, text="save file", fg_color=cfg.MESSAGE_BACKGROUND_COLOR, corner_radius=10, command=self.save_file)
+                message_button.pack()
+                self.message_frame = message_frame
+                return message_frame
 
 
     def save_file(self):

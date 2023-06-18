@@ -22,11 +22,8 @@ class ConversationHubFrame(ctk.CTkFrame):
         self.conversation_title_frame.pack(fill="x")
 
         # Create conversation frame
-        self.conversation_frame = ctk.CTkFrame(self, fg_color=cfg.HUB_MIDDLE_COLUMN_COLOR)
+        self.conversation_frame = ctk.CTkScrollableFrame(self, fg_color=cfg.HUB_MIDDLE_COLUMN_COLOR)
         self.conversation_frame.pack(fill="both", expand=True)
-
-        self.scrollbar = ctk.CTkScrollbar(self.conversation_frame)
-        self.scrollbar.pack(side=tkinter.RIGHT, fill="y")
 
         self.send_file_button = ctk.CTkButton(self, text="Send File", command=self.send_file_message, width=50)
         self.send_file_button.pack(fill="x", side=tkinter.LEFT)
