@@ -1,7 +1,5 @@
 import tkinter as tk
 from tkinter import filedialog
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives import serialization
 
 def show_password():
     password = password_entry.get()

@@ -1,9 +1,6 @@
 import customtkinter as ctk
 import config as cfg
-from cryptography.hazmat.primitives import serialization
 
-from encryption.asym_key_handler import asymKeyHandler
-from encryption.session_key_handler import sessionKeyHandler
 from gui_frames.gui_key_generator_frame import KeyGeneratorFrame
 
 

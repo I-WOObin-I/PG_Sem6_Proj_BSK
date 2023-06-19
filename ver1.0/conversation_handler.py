@@ -7,7 +7,6 @@
 '''
 
 from chat_files_handler import ChatFilesHandler
-from cryptography.fernet import Fernet
 from socket_manager import SocketManager
 import threading
 

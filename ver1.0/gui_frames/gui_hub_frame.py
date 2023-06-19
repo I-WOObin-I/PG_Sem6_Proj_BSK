@@ -17,13 +17,10 @@
 '''
 
 import customtkinter as ctk
-from cryptography.hazmat.primitives import serialization
 
 from encryption.asym_key_handler import asymKeyHandler
 from encryption.session_key_handler import sessionKeyHandler
 from gui_frames.gui_frame import GuiFrame
-from user_data_manager import UserDataManager
-from gui_frames.gui_key_generator_frame import KeyGeneratorFrame
 
 from gui_frames.hub_frames.hub_utility_frame import SettingsHubFrame
 from gui_frames.hub_frames.hub_conversation_frame import ConversationHubFrame

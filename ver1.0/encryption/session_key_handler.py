@@ -1,9 +1,9 @@
 import json
 from base64 import b64encode, b64decode
 
-from crypto.Cipher import AES
-from crypto.Random import get_random_bytes
-from crypto.Util.Padding import pad, unpad
+from Crypto.Cipher import AES
+from Crypto.Random import get_random_bytes
+from Crypto.Util.Padding import pad, unpad
 
 KEY_SIZE = 256
 

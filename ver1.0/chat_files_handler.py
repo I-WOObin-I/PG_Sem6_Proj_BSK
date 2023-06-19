@@ -34,7 +34,6 @@
 '''
 
 import json
-from cryptography.fernet import Fernet
 
 class ChatFilesHandler():
     def __init__(self):

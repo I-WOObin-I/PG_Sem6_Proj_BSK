@@ -1,6 +1,6 @@
-from crypto.Cipher import PKCS1_OAEP
-from crypto.Hash import SHA256
-from crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_OAEP
+from Crypto.Hash import SHA256
+from Crypto.PublicKey import RSA
 
 PUBLIC_EXPONENT = 65537
 KEY_LENGTHS = [2048, 4096, 8192]

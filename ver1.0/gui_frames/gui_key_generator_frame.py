@@ -1,11 +1,7 @@
-import tkinter as tk
 import customtkinter as ctk
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives import serialization
 
 from encryption.asym_key_handler import asymKeyHandler
 from gui_frames.gui_frame import GuiFrame
-from user_data_manager import UserDataManager
 import config as cfg
 
 FRAME_WIDTH = 2000
