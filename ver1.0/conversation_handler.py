@@ -6,9 +6,8 @@
 - returning conversation to gui dictionary format
 '''
 
-from chat_files_handler import ChatFilesHandler
 from socket_manager import SocketManager
-import threading
+
 
 class ConversationHandler():
     def __init__(self, address, port, conversation_frame, chats_frame, asymmetric_key_handler, session_key_handler):
@@ -53,7 +52,8 @@ class ConversationHandler():
 
 
     def send_text(self, text):
-        self.socket_manager.send_text(text)
+        encrypted = self.session_key_handler.encrypt_CBC(text)
+        self.socket_manager.send_text(encrypted)
         self.conversation_frame.add_message('t', text, local_sender=True)
 
     def send_file(self, file_path):
@@ -72,6 +72,7 @@ class ConversationHandler():
         elif message_type == 'k':
             self.received_session_key(data)
         else:
+            data = self.session_key_handler.decrypt_CBC(data)
             message = self.conversation_frame.add_message(message_type, data, local_sender=False)
             return message
 

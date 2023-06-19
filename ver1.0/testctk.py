@@ -1,6 +1,7 @@
 from time import sleep
 
 import customtkinter as ctk
+
 root = ctk.CTk()
 root.title("Tk")
 root.geometry("800x400")

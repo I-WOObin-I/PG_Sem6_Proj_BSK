@@ -3,19 +3,19 @@ from Crypto.Hash import SHA256
 from Crypto.PublicKey import RSA
 
 PUBLIC_EXPONENT = 65537
-KEY_LENGTHS = [2048, 4096, 8192]
+KEY_LENGTHS = ['2048', '4096', '8192']
 
 class asymKeyHandler():
-    def __init__(self, session_handler):
+    def __init__(self):
         self.private_key = None
         self.public_key = None
         self.guest_key = None
         self.user_password = "1234"
         self.user_password_hash = None
 
-        self.session_handler = session_handler
 
     def generate_keys(self, key_length):
+        print("Generating keys: "+ str(key_length))
         self.private_key = RSA.generate(key_length, e=PUBLIC_EXPONENT)
         self.public_key = self.private_key.publickey()
 
@@ -58,7 +58,7 @@ class asymKeyHandler():
         self.private_key = self.load_key(file_path)
     def load_guest_key(self, guest_public_key):
         try:
-            self.guest_key = RSA.importKey(guest_public_key)
+            self.guest_key = RSA.import_key(guest_public_key)
         except:
             print("Error loading guest key")
 
@@ -86,7 +86,10 @@ class asymKeyHandler():
         self.user_password = password
         self.user_password_hash = SHA256.new(password.encode())
 
-    def get_key_lengths(self):
+    def get_key_length(self):
+        return int(self.public_key.n).bit_length()
+
+    def get_key_length_options(self):
         return KEY_LENGTHS
 
 

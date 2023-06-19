@@ -1,6 +1,7 @@
 
-import customtkinter as ctk
 import config
+import customtkinter as ctk
+
 
 class GuiFrame(ctk.CTkFrame):
 

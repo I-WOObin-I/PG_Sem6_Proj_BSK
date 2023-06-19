@@ -1,6 +1,5 @@
-import customtkinter as ctk
 import config as cfg
-
+import customtkinter as ctk
 from gui_frames.gui_key_generator_frame import KeyGeneratorFrame
 
 
@@ -65,13 +64,13 @@ class SettingsHubFrame(ctk.CTkFrame):
 
     def upload_pub_key_button_action(self):
         file_path = ctk.filedialog.askopenfilename(title="Select Public Key File", initialfile=cfg.DEFAULT_PUBLIC_KEY_FILE_NAME, filetypes=cfg.KEY_FILE_TYPES)
-        self.asymm_key_handler.decrypt_and_load_public_key(file_path)
-        self.public_key_fingerprint.configure(text=str(self.asymm_key_handler.get_public_key_fingerprint()))
-        self.key_length_label.configure(text="Key length: " + str(self.asymm_key_handler.get_public_key_length()))
+        self.asymm_key_handler.load_public_key(file_path)
+        #self.public_key_fingerprint.configure(text=str(self.asymm_key_handler.get_public_key_fingerprint()))
+        self.key_length_label.configure(text="Key length: " + str(self.asymm_key_handler.get_key_length()))
 
     def upload_priv_key_button_action(self):
         file_path = ctk.filedialog.askopenfilename(title="Select Private Key File", initialfile=cfg.DEFAULT_PRIVATE_KEY_FILE_NAME, filetypes=cfg.KEY_FILE_TYPES)
-        self.asymm_key_handler.decrypt_and_load_private_key(file_path)
+        self.asymm_key_handler.load_private_key(file_path)
         self.private_key_loaded_label.configure(text="Private Key Loaded")
 
     def logout_button_action(self):

@@ -17,14 +17,12 @@
 '''
 
 import customtkinter as ctk
-
 from encryption.asym_key_handler import asymKeyHandler
 from encryption.session_key_handler import sessionKeyHandler
 from gui_frames.gui_frame import GuiFrame
-
-from gui_frames.hub_frames.hub_utility_frame import SettingsHubFrame
-from gui_frames.hub_frames.hub_conversation_frame import ConversationHubFrame
 from gui_frames.hub_frames.hub_chats_frame import ChatsHubFrame
+from gui_frames.hub_frames.hub_conversation_frame import ConversationHubFrame
+from gui_frames.hub_frames.hub_utility_frame import SettingsHubFrame
 
 LEFT_COLUMN_WIDTH = 100
 LEFT_COLUMN_COLOR = "#212121"
@@ -39,8 +37,8 @@ class MainMenuFrame(GuiFrame):
     def __init__(self, parent, callback):
         super().__init__(parent, callback)
 
-        self.asymm_key_handler = asymKeyHandler()
         self.session_key_handler = sessionKeyHandler()
+        self.asymm_key_handler = asymKeyHandler()
 
         self.parent = parent
         self.pack(fill="both", expand=True)

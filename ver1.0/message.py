@@ -1,8 +1,9 @@
 from io import BytesIO
 
 import customtkinter as ctk
+from PIL import Image
+
 import config as cfg
-from PIL import Image, ImageTk
 
 
 class Message:

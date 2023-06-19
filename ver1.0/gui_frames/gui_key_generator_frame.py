@@ -1,11 +1,11 @@
+import config as cfg
 import customtkinter as ctk
-
 from encryption.asym_key_handler import asymKeyHandler
 from gui_frames.gui_frame import GuiFrame
-import config as cfg
 
 FRAME_WIDTH = 2000
 CTkLabel_LENGTH = 60
+KEY_LENGTHS = [2048, 4096, 8192]
 
 class KeyGeneratorFrame(GuiFrame):
     def __init__(self, parent, callback, asym_key_handler):
@@ -13,7 +13,7 @@ class KeyGeneratorFrame(GuiFrame):
 
         self.parent = parent
         self.asym_key_handler = asym_key_handler
-        self.key_lenght_options = self.asym_key_handler.get_key_lengths()
+        self.key_lenght_options = self.asym_key_handler.get_key_length_options()
         self.configure(width=FRAME_WIDTH)
 
         # Create a CTkLabel for the key size prompt
@@ -23,7 +23,7 @@ class KeyGeneratorFrame(GuiFrame):
         # Create an entry widget for the key size
         self.key_size_value = ctk.StringVar()
         self.key_size_value.set(str(self.key_lenght_options[0]))
-        self.key_size_entry = ctk.CTkOptionMenu(self, values=[str(option) for option in self.key_lenght_options])
+        self.key_size_entry = ctk.CTkOptionMenu(self, values=self.key_lenght_options, variable=self.key_size_value)
         self.key_size_entry.pack()
 
         # Create a CTkButton to generate the public and private keys
@@ -51,21 +51,22 @@ class KeyGeneratorFrame(GuiFrame):
         save_private_CTkButton.pack(pady=10)
 
     def generate_keys_button_action(self):
-        public_key_fingerprint = self.asym_key_handler.generate_keys(int(self.key_size_value.get()))
-        self.public_key_CTkLabel.configure(text="public key generated\n fingerprint: \n" + public_key_fingerprint)
+        self.asym_key_handler.generate_keys(int(self.key_size_value.get()))
+        #public_key_fingerprint = self.asym_key_handler.get_public_key_fingerprint()
+        self.public_key_CTkLabel.configure(text="public key generated\n fingerprint: \n")
         self.private_key_CTkLabel.configure(text="private key generated\n" + "*****")
 
     def save_public_key_button_action(self):
         file_path = ctk.filedialog.asksaveasfilename(title="Save Public Key As", initialfile=cfg.DEFAULT_PUBLIC_KEY_FILE_NAME, filetypes=cfg.KEY_FILE_TYPES)
         if file_path == '':
             return
-        self.asym_key_handler.encrypt_and_save_public_key(file_path)
+        self.asym_key_handler.save_public_key(file_path)
 
     def save_private_key_button_action(self):
-        file_path = ctk.filedialog.asksaveasfilename(title="Save Private Key As", initialfile=cfg.DEFAULT_PUBLIC_KEY_FILE_NAME, filetypes=cfg.KEY_FILE_TYPES)
+        file_path = ctk.filedialog.asksaveasfilename(title="Save Private Key As", initialfile=cfg.DEFAULT_PRIVATE_KEY_FILE_NAME, filetypes=cfg.KEY_FILE_TYPES)
         if file_path == '':
             return
-        self.asym_key_handler.encrypt_and_save_private_key(file_path)
+        self.asym_key_handler.save_private_key(file_path)
 
 
 if __name__ == "__main__":

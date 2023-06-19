@@ -1,11 +1,9 @@
 ''' class for frame that allows user to create a new profile '''
 import hashlib
-
-import customtkinter as ctk
 from tkinter import messagebox
 
 import config
-
+import customtkinter as ctk
 from gui_frames.gui_frame import GuiFrame
 from user_data_manager import UserDataManager
 from user_login_handler import UserLoginHandler

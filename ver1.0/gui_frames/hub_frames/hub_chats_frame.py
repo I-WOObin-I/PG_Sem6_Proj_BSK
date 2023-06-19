@@ -1,7 +1,8 @@
-import customtkinter as ctk
 import config as cfg
+import customtkinter as ctk
 from conversation_handler import ConversationHandler
 from gui_frames.hub_frames.hub_conversation_frame import ConversationHubFrame
+
 
 class ChatsHubFrame(ctk.CTkFrame):
     def __init__(self, parent, asymm_key_handler, session_key_handler):

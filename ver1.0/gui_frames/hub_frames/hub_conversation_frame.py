@@ -1,7 +1,7 @@
 import tkinter
 
-import customtkinter as ctk
 import config as cfg
+import customtkinter as ctk
 from message import Message
 
 

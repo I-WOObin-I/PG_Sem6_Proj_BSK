@@ -63,17 +63,21 @@ class SocketManager:
     def thread_send_public_key(self, public_key):
         self.update_conn()
         self.log("Sending public key")
-        packet_type = b'p'
-        packet_len = struct.pack('H', len(public_key))
+        packet_type = b'g'
+        packet_len = struct.pack('H', len(bytes(public_key)))
+        self.log("Packet len: " + str(len(bytes(public_key))))
         packet_data = public_key
         packet = packet_type + packet_len + packet_data
         self.conn.sendall(packet)
+
+
 
     def thread_send_session_key(self, session_key):
         self.update_conn()
         self.log("Sending session key")
         packet_type = b'k'
         packet_len = struct.pack('H', len(session_key))
+        print("Packet len: " + str(len(session_key)))
         packet_data = session_key
         packet = packet_type + packet_len + packet_data
         self.conn.sendall(packet)
@@ -157,7 +161,7 @@ class SocketManager:
         mess_len = struct.unpack('H', mess_len_raw)[0]
         self.log("Message length: " + str(mess_len))
 
-        mess_data = self.conn.recv(mess_len).decode()
+        mess_data = self.conn.recv(mess_len)
 
         self.log("Message data: " + str(mess_data))
         self.receive_callback('k', mess_data)

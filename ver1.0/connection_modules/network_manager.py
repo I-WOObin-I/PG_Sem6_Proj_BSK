@@ -1,7 +1,8 @@
 import socket
-import time
-import threading
 import struct
+import threading
+import time
+
 
 class NetworkManager:
     def __init__(self, name):
