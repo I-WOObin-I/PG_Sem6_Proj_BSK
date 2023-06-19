@@ -4,10 +4,12 @@ from conversation_handler import ConversationHandler
 from gui_frames.hub_frames.hub_conversation_frame import ConversationHubFrame
 
 class ChatsHubFrame(ctk.CTkFrame):
-    def __init__(self, parent):
+    def __init__(self, parent, asymm_key_handler, session_key_handler):
         super().__init__(parent)
 
         self.parent = parent
+        self.asymm_key_handler = asymm_key_handler
+        self.session_key_handler = session_key_handler
 
         self.configure(fg_color=cfg.HUB_RIGHT_COLUMN_COLOR)
 
@@ -28,12 +30,15 @@ class ChatsHubFrame(ctk.CTkFrame):
         self.new_conversation_button.pack(fill="x")
         self.connect_button.pack(fill="x")
 
+        self.log_frame = ctk.CTkScrollableFrame(self)
+        self.log_frame.pack(fill="both", expand=True)
+
     def new_conversation_button_action(self):
         address = self.address_entry.get()
         port = self.port_entry.get()
         hub_conversation_frame = ConversationHubFrame(self.parent)
         self.parent.set_conversation_frame(hub_conversation_frame)
-        new_conversation_handler = ConversationHandler(address, port, hub_conversation_frame, self)
+        new_conversation_handler = ConversationHandler(address, port, hub_conversation_frame, self, self.asymm_key_handler, self.session_key_handler)
         new_conversation_handler.new_conversation()
 
     def connect_button_action(self):
@@ -41,11 +46,11 @@ class ChatsHubFrame(ctk.CTkFrame):
         port = self.port_entry.get()
         hub_conversation_frame = ConversationHubFrame(self.parent)
         self.parent.set_conversation_frame(hub_conversation_frame)
-        new_conversation_handler = ConversationHandler(address, port, hub_conversation_frame, self)
+        new_conversation_handler = ConversationHandler(address, port, hub_conversation_frame, self, self.asymm_key_handler, self.session_key_handler)
         new_conversation_handler.connect()
 
     def log(self, text):
-        new_label = ctk.CTkLabel(self, text=text)
+        new_label = ctk.CTkLabel(self.log_frame, text=text, anchor='w', justify='left', wraplength=150)
         new_label.pack()
 
 

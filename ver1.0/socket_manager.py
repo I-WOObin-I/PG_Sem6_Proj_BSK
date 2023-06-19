@@ -44,6 +44,13 @@ class SocketManager:
         self.receiving_thread = threading.Thread(target=self.thread_receive)
         self.receiving_thread.start()
 
+    def send_public_key(self, public_key):
+        send_thread = threading.Thread(target=self.thread_send_public_key, args=(public_key,))
+        send_thread.start()
+
+    def send_session_key(self, session_key):
+        send_thread = threading.Thread(target=self.thread_send_session_key, args=(session_key,))
+        send_thread.start()
 
     def send_text(self, data=""):
         send_thread = threading.Thread(target=self.thread_send_text, args=(data,))
@@ -53,6 +60,23 @@ class SocketManager:
         send_thread = threading.Thread(target=self.thread_send_file, args=(file, message))
         send_thread.start()
 
+    def thread_send_public_key(self, public_key):
+        self.update_conn()
+        self.log("Sending public key")
+        packet_type = b'p'
+        packet_len = struct.pack('H', len(public_key))
+        packet_data = public_key
+        packet = packet_type + packet_len + packet_data
+        self.conn.sendall(packet)
+
+    def thread_send_session_key(self, session_key):
+        self.update_conn()
+        self.log("Sending session key")
+        packet_type = b'k'
+        packet_len = struct.pack('H', len(session_key))
+        packet_data = session_key
+        packet = packet_type + packet_len + packet_data
+        self.conn.sendall(packet)
 
     def thread_send_text(self, text):
         self.update_conn()
@@ -95,7 +119,13 @@ class SocketManager:
             mess_type = self.conn.recv(1)
             if not mess_type:
                 pass
-            if mess_type == b't':
+            if mess_type == b'g':
+                self.thread_receive_guest_key()
+
+            elif mess_type == b'k':
+                self.thread_receive_session_key()
+
+            elif mess_type == b't':
                 self.thread_receive_text()
 
             elif mess_type == b'f':
@@ -107,6 +137,30 @@ class SocketManager:
             else:
                 pass
         return
+
+    def thread_receive_guest_key(self):
+        self.log("Message type: public key")
+
+        mess_len_raw = self.conn.recv(2)
+        mess_len = struct.unpack('H', mess_len_raw)[0]
+        self.log("Message length: " + str(mess_len))
+
+        mess_data = self.conn.recv(mess_len).decode()
+
+        self.log("Message data: " + str(mess_data))
+        self.receive_callback('g', mess_data)
+
+    def thread_receive_session_key(self):
+        self.log("Message type: session key")
+
+        mess_len_raw = self.conn.recv(2)
+        mess_len = struct.unpack('H', mess_len_raw)[0]
+        self.log("Message length: " + str(mess_len))
+
+        mess_data = self.conn.recv(mess_len).decode()
+
+        self.log("Message data: " + str(mess_data))
+        self.receive_callback('k', mess_data)
 
     def thread_receive_text(self):
         self.log("Message type: text")

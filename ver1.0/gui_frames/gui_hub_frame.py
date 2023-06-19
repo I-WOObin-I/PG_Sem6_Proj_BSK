@@ -19,6 +19,8 @@
 import customtkinter as ctk
 from cryptography.hazmat.primitives import serialization
 
+from encryption.asym_key_handler import asymKeyHandler
+from encryption.session_key_handler import sessionKeyHandler
 from gui_frames.gui_frame import GuiFrame
 from user_data_manager import UserDataManager
 from gui_frames.gui_key_generator_frame import KeyGeneratorFrame
@@ -40,6 +42,9 @@ class MainMenuFrame(GuiFrame):
     def __init__(self, parent, callback):
         super().__init__(parent, callback)
 
+        self.asymm_key_handler = asymKeyHandler()
+        self.session_key_handler = sessionKeyHandler()
+
         self.parent = parent
         self.pack(fill="both", expand=True)
 
@@ -48,13 +53,13 @@ class MainMenuFrame(GuiFrame):
         self.columnconfigure(2, minsize=RIGHT_COLUMN_WIDTH)
         self.rowconfigure(0, weight=1)
 
-        self.settings_frame = SettingsHubFrame(self)
+        self.settings_frame = SettingsHubFrame(self, self.asymm_key_handler, self.session_key_handler)
         self.settings_frame.grid(row=0, column=0, sticky="nsew", padx=FRAMES_PADX, pady=FRAMES_PADY)
 
         self.conversation_frame = ConversationHubFrame(self)
         self.conversation_frame.grid(row=0, column=1, sticky="nsew", padx=FRAMES_PADX, pady=FRAMES_PADY)
 
-        self.chats_frame = ChatsHubFrame(self)
+        self.chats_frame = ChatsHubFrame(self, self.asymm_key_handler, self.session_key_handler)
         self.chats_frame.grid(row=0, column=2, sticky="nsew", padx=FRAMES_PADX, pady=FRAMES_PADY)
 
     def show_frame(self, frame_class):

@@ -6,6 +6,7 @@ from cryptography.hazmat.primitives import serialization
 from encryption.asym_key_handler import asymKeyHandler
 from gui_frames.gui_frame import GuiFrame
 from user_data_manager import UserDataManager
+import config as cfg
 
 FRAME_WIDTH = 2000
 CTkLabel_LENGTH = 60
@@ -59,16 +60,16 @@ class KeyGeneratorFrame(GuiFrame):
         self.private_key_CTkLabel.configure(text="private key generated\n" + "*****")
 
     def save_public_key_button_action(self):
-        file_path = ctk.filedialog.asksaveasfilename(title="Save Public Key As", defaultextension=".pem")
+        file_path = ctk.filedialog.asksaveasfilename(title="Save Public Key As", initialfile=cfg.DEFAULT_PUBLIC_KEY_FILE_NAME, filetypes=cfg.KEY_FILE_TYPES)
         if file_path == '':
             return
-        self.asym_key_handler.save_public_key(file_path)
+        self.asym_key_handler.encrypt_and_save_public_key(file_path)
 
     def save_private_key_button_action(self):
-        file_path = ctk.filedialog.asksaveasfilename(title="Save Private Key As", defaultextension=".pem")
+        file_path = ctk.filedialog.asksaveasfilename(title="Save Private Key As", initialfile=cfg.DEFAULT_PUBLIC_KEY_FILE_NAME, filetypes=cfg.KEY_FILE_TYPES)
         if file_path == '':
             return
-        self.asym_key_handler.save_private_key(file_path)
+        self.asym_key_handler.encrypt_and_save_private_key(file_path)
 
 
 if __name__ == "__main__":
