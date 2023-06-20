@@ -17,8 +17,6 @@
 '''
 
 import customtkinter as ctk
-from encryption.asym_key_handler import asymKeyHandler
-from encryption.session_key_handler import sessionKeyHandler
 from gui_frames.gui_frame import GuiFrame
 from gui_frames.hub_frames.hub_chats_frame import ChatsHubFrame
 from gui_frames.hub_frames.hub_conversation_frame import ConversationHubFrame
