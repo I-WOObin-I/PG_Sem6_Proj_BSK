@@ -11,6 +11,7 @@ class Message:
         self.type = type
         self.text = None
         self.file = None
+        self.file_name = "file"
         if type == "t":
             self.text = data
         elif type == "f":
@@ -38,12 +39,12 @@ class Message:
                 message_frame = ctk.CTkFrame(parent_frame, fg_color="transparent", corner_radius=10)
                 message_label = ctk.CTkLabel(message_frame, text="", fg_color=cfg.MESSAGE_BACKGROUND_COLOR, corner_radius=10, image=imageTk, height=220)
                 message_label.pack(expand=True)
-                message_button = ctk.CTkButton(message_frame, text="save file", fg_color=cfg.MESSAGE_BACKGROUND_COLOR, corner_radius=10, command=self.save_file)
+                message_button = ctk.CTkButton(message_frame, text=self.file_name, fg_color=cfg.MESSAGE_BACKGROUND_COLOR, corner_radius=10, command=self.save_file)
                 message_button.pack()
                 return message_frame
             except:
                 message_frame = ctk.CTkFrame(parent_frame, fg_color="transparent", corner_radius=10)
-                message_button = ctk.CTkButton(message_frame, text="save file", fg_color=cfg.MESSAGE_BACKGROUND_COLOR, corner_radius=10, command=self.save_file)
+                message_button = ctk.CTkButton(message_frame, text=self.file_name, fg_color=cfg.MESSAGE_BACKGROUND_COLOR, corner_radius=10, command=self.save_file)
                 message_button.pack()
                 self.message_frame = message_frame
                 return message_frame
@@ -70,5 +71,5 @@ class Message:
     def finish_progressbar(self):
         self.progressbar.destroy()
 
-    def decrypt_file_EAX(self):
-        self.file = self.session_key_handler.decrypt_file_EAX(self.file)
+    def decrypt_file(self):
+        self.file_name, self.file = self.session_key_handler.decrypt_file(self.file)

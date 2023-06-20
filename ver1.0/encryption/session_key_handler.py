@@ -1,5 +1,6 @@
 import json
 from base64 import b64encode, b64decode
+import struct
 
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
@@ -50,10 +51,64 @@ class sessionKeyHandler():
             return None
 
 
-    def encrypt_file_EAX(self, data):
+
+
+    def encrypt_file(self, encryption_type, file_name, data):
+        if encryption_type == 'x':
+            return self.encrypt_file_EAX(file_name, data)
+        else:
+            print("Error unexpected encryption type: " + encryption_type)
+            return None
+    def decrypt_file(self, data):
+        encryption_type = struct.unpack('B', data[:1])[0]
+        if encryption_type == ord('x'):
+            file_name, file = self.decrypt_file_EAX(data[1:])
+        else:
+            print("Error unexpected encryption type: " + encryption_type)
+            return None
+        return file_name, file
+
+
+    def encrypt_file_EAX(self, file_name, file):
         cipher_EAX = AES.new(self.session_key, AES.MODE_EAX)
-        return cipher_EAX.encrypt(data)
+
+        encryption_type = struct.pack('B', ord('x'))
+        file_name_len = struct.pack('I', len(file_name))
+        print("File name len: " + str(file_name_len))
+        print("File name: " + file_name)
+
+        data = file_name_len + file_name.encode() + file
+        data = cipher_EAX.encrypt(data)
+
+        packed = encryption_type + data
+
+        # <encryption type>[[<file name len><file name><file>]]
+
+        return packed
 
     def decrypt_file_EAX(self, data):
         cipher_EAX = AES.new(self.session_key, AES.MODE_EAX)
-        return cipher_EAX.decrypt(data)
+        data = cipher_EAX.decrypt(data)
+
+        file_name_len = struct.unpack('I', data[:4])[0]
+        print("File name len: " + str(file_name_len))
+
+        file_name = data[4:4+file_name_len].decode()
+        print("File name: " + file_name)
+
+        file = data[4+file_name_len:]
+
+        return file_name, file
+
+
+
+
+
+
+
+
+
+
+
+
+

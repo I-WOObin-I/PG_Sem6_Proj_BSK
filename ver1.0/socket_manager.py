@@ -60,8 +60,8 @@ class SocketManager:
         send_thread = threading.Thread(target=self.thread_send_file, args=(file, message))
         send_thread.start()
 
-    def send_file_CBC(self, iv, file, message):
-        send_thread = threading.Thread(target=self.thread_send_file_CBC, args=(iv, file, message))
+    def send_file_encrypted(self, file, message):
+        send_thread = threading.Thread(target=self.thread_send_file_encrypted, args=(file, message))
         send_thread.start()
 
     def thread_send_public_key(self, public_key):
@@ -94,56 +94,6 @@ class SocketManager:
         packet_data = text.encode()
         packet = packet_type + packet_len + packet_data
         self.conn.sendall(packet)
-
-    def thread_send_file(self, data, message):
-        self.update_conn()
-        self.log("Sending file")
-
-        packet_type = b'f'
-        packet_len = struct.pack('I', len(data))
-        self.log("File length: " + str(len(data)))
-        packet = packet_type + packet_len
-        self.conn.sendall(packet)
-
-        message.set_progressbar()
-        total_sent = 0
-
-        while total_sent < len(data):
-            sent = self.sock.send(data[total_sent:])
-            if sent == 0:
-                raise RuntimeError("socket connection broken")
-            total_sent = total_sent + sent
-            # update the progress bar
-            message.set_progressbar_value(sent/len(data))
-
-        message.finish_progressbar()
-
-    def thread_send_file_CBC(self, iv, data, message):
-        self.update_conn()
-        self.log("Sending file")
-
-        packet_type = b'f'
-        packet_len = struct.pack('H', len(iv))
-        packet_data = iv
-        packet = packet_type + packet_len + packet_data
-        self.conn.sendall(packet)
-
-        packet_len = struct.pack('I', len(data))
-        self.log("File length: " + str(len(data)))
-        packet = packet_len
-        self.conn.sendall(packet)
-
-        message.set_progressbar()
-        total_sent = 0
-
-        while total_sent < len(data):
-            sent = self.sock.send(data[total_sent:])
-            if sent == 0:
-                raise RuntimeError("socket connection broken")
-            total_sent = total_sent + sent
-            message.set_progressbar_value(sent / len(data))
-
-        message.finish_progressbar()
 
     def thread_receive(self):
         self.lock.acquire()
@@ -209,6 +159,29 @@ class SocketManager:
         self.log("Message data: " + str(mess_data))
         self.receive_callback('t', mess_data)
 
+    def thread_send_file(self, data, message):
+        self.update_conn()
+        self.log("Sending file")
+
+        packet_type = b'f'
+        packet_len = struct.pack('I', len(data))
+        self.log("File length: " + str(len(data)))
+        packet = packet_type + packet_len
+        self.conn.sendall(packet)
+
+        message.set_progressbar()
+        total_sent = 0
+
+        while total_sent < len(data):
+            sent = self.sock.send(data[total_sent:])
+            if sent == 0:
+                raise RuntimeError("socket connection broken")
+            total_sent = total_sent + sent
+            # update the progress bar
+            message.set_progressbar_value(sent/len(data))
+
+        message.finish_progressbar()
+
     def thread_receive_file(self):
         self.log("Received file")
 
@@ -232,44 +205,59 @@ class SocketManager:
 
         self.log("File received")
         message.file = b''.join(chunks)
-        message.decrypt_file_EAX()
+        message.decrypt_file()
         message.finish_progressbar()
 
-    def thread_receive_file_CBC(self):
+
+
+
+    def thread_send_file_encrypted(self, data, message):
+        self.update_conn()
+        self.log("Sending file")
+
+        packet_type = b'f'
+        packet_len = struct.pack('I', len(data))
+        packet_data = data
+        packet = packet_type + packet_len + packet_data
+        self.conn.sendall(packet)
+
+        message.set_progressbar()
+        total_sent = 0
+
+        while total_sent < len(data):
+            sent = self.sock.send(data[total_sent:])
+            if sent == 0:
+                raise RuntimeError("socket connection broken")
+            total_sent = total_sent + sent
+            message.set_progressbar_value(sent / len(data))
+
+        message.finish_progressbar()
+
+    def thread_receive_file_encrypted(self):
+        self.update_conn()
         self.log("Received file")
 
-        mess_len_raw = self.conn.recv(2)
-        mess_len = struct.unpack('H', mess_len_raw)[0]
-        self.log("iv length: " + str(mess_len))
+        data_len_raw = self.conn.recv(4)
+        data_len = struct.unpack('I', data_len_raw)[0]
+        self.log("data length: " + str(data_len))
 
-        mess_data = self.conn.recv(mess_len)
-
-        self.log("iv data: " + str(mess_data))
-        iv = mess_data
-
-        self.log("Received file")
-
-        mess_len_raw = self.conn.recv(4)
-        mess_len = struct.unpack('I', mess_len_raw)[0]
-        self.log("File length: " + str(mess_len))
-
-        message = self.receive_callback('f', mess_len)
+        message = self.receive_callback('f', data_len)
         message.set_progressbar()
         chunks = []
         bytes_recd = 0
 
-        while bytes_recd < mess_len:
-            chunk = self.conn.recv(min(mess_len - bytes_recd, BUFFER_SIZE_FILE))
+        while bytes_recd < data_len:
+            chunk = self.conn.recv(min(data_len - bytes_recd, BUFFER_SIZE_FILE))
             if not chunk:
                 break
 
             chunks.append(chunk)
-            message.set_progressbar_value(bytes_recd / mess_len)
+            message.set_progressbar_value(bytes_recd / data_len)
             bytes_recd = bytes_recd + len(chunk)
 
         self.log("File received")
         message.file = b''.join(chunks)
-        message.decrypt_file_CBC(iv)
+        message.decrypt_file()
         message.finish_progressbar()
 
 
