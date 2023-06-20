@@ -18,7 +18,7 @@ class ConversationHandler():
         conversation_frame.set_conversation_handler(self)
 
         self.user_manager = user_manager
-        self.asymmetric_key_handler = user_manager.asymmetric_key_handler
+        self.asymmetric_key_handler = user_manager.asym_key_handler
         self.session_key_handler = user_manager.session_key_handler
 
         self.socket_manager = SocketManager(self, self.address, self.port, self.received)
