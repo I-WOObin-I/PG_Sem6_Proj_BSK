@@ -3,12 +3,18 @@ import customtkinter as ctk
 import config
 from gui_frames import frames_list
 from gui_frames.gui_frame import GuiFrame
-from user_data_manager import UserDataManager
+from gui_frames.gui_login_frame import LoginFrame
+from user_manager import UserManager
 
 
 class GuiManager(ctk.CTk):
     def __init__(self):
         super().__init__()
+
+        ctk.set_appearance_mode(config.CTK_APPEARANCE_MODE)
+        ctk.set_default_color_theme(config.CTK_DEFAULT_COLOR_THEME)
+
+        self.user_manager = UserManager()
 
         # Set the window title
         self.title("Secure Foreplay")
@@ -18,11 +24,7 @@ class GuiManager(ctk.CTk):
 
         self.frame_stack = []
 
-        self.user_data_manager = UserDataManager()
-
-        #self.frames_list = frames_list.FRAMES_LIST
-
-        #self.show_loginFrame(lambda :())
+        self.show_frame(LoginFrame)
 
     def go_back(self):
         try:
@@ -38,7 +40,7 @@ class GuiManager(ctk.CTk):
     def show_frame(self, frame_class_ref: GuiFrame):
 
         new_frame = frame_class_ref.__new__(frame_class_ref)
-        new_frame.__init__(self, self.go_back, self.user_data_manager)
+        new_frame.__init__(self, self.go_back, self.user_manager)
 
         if len(self.frame_stack) != 0:
             self.frame_stack[-1].pack_forget()
@@ -59,8 +61,6 @@ class GuiManager(ctk.CTk):
         return
 
 if __name__ == "__main__":
-    ctk.set_appearance_mode(config.CTK_APPEARANCE_MODE)
-    ctk.set_default_color_theme(config.CTK_DEFAULT_COLOR_THEME)
     root = GuiManager()
     root.show_frame(frames_list.LoginFrame)
 

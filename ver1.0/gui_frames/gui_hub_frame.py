@@ -22,7 +22,8 @@ from encryption.session_key_handler import sessionKeyHandler
 from gui_frames.gui_frame import GuiFrame
 from gui_frames.hub_frames.hub_chats_frame import ChatsHubFrame
 from gui_frames.hub_frames.hub_conversation_frame import ConversationHubFrame
-from gui_frames.hub_frames.hub_utility_frame import SettingsHubFrame
+from gui_frames.hub_frames.hub_utility_frame import UtilityHubFrame
+from user_manager import UserManager
 
 LEFT_COLUMN_WIDTH = 100
 LEFT_COLUMN_COLOR = "#212121"
@@ -33,9 +34,9 @@ RIGHT_COLUMN_COLOR = "#212121"
 FRAMES_PADX = 3
 FRAMES_PADY = 3
 
-class MainMenuFrame(GuiFrame):
-    def __init__(self, parent, callback):
-        super().__init__(parent, callback)
+class HubFrame(GuiFrame):
+    def __init__(self, parent, callback, user_manager):
+        super().__init__(parent, callback, user_manager)
 
         self.session_key_handler = sessionKeyHandler()
         self.asymm_key_handler = asymKeyHandler()
@@ -48,13 +49,13 @@ class MainMenuFrame(GuiFrame):
         self.columnconfigure(2, minsize=RIGHT_COLUMN_WIDTH)
         self.rowconfigure(0, weight=1)
 
-        self.settings_frame = SettingsHubFrame(self, self.asymm_key_handler, self.session_key_handler)
+        self.settings_frame = UtilityHubFrame(self, self.user_manager)
         self.settings_frame.grid(row=0, column=0, sticky="nsew", padx=FRAMES_PADX, pady=FRAMES_PADY)
 
         self.conversation_frame = ConversationHubFrame(self)
         self.conversation_frame.grid(row=0, column=1, sticky="nsew", padx=FRAMES_PADX, pady=FRAMES_PADY)
 
-        self.chats_frame = ChatsHubFrame(self, self.asymm_key_handler, self.session_key_handler)
+        self.chats_frame = ChatsHubFrame(self, self.user_manager)
         self.chats_frame.grid(row=0, column=2, sticky="nsew", padx=FRAMES_PADX, pady=FRAMES_PADY)
 
     def show_frame(self, frame_class):
@@ -69,6 +70,6 @@ if __name__ == "__main__":
     root = ctk.CTk()
     root.title("Tk")
     root.geometry("800x400")
-    login_frame = MainMenuFrame(root, lambda: ())
-    login_frame.pack(expand=True, fill="both")
+    login_frame = HubFrame(root, lambda: (), UserManager())
+    login_frame.pack()
     root.mainloop()

@@ -5,12 +5,13 @@ from gui_frames.hub_frames.hub_conversation_frame import ConversationHubFrame
 
 
 class ChatsHubFrame(ctk.CTkFrame):
-    def __init__(self, parent, asymm_key_handler, session_key_handler):
+    def __init__(self, parent, user_manager):
         super().__init__(parent)
 
         self.parent = parent
-        self.asymm_key_handler = asymm_key_handler
-        self.session_key_handler = session_key_handler
+        self.user_manager = user_manager
+        self.asym_key_handler = user_manager.asym_key_handler
+        self.session_key_handler = user_manager.session_key_handler
 
         self.configure(fg_color=cfg.HUB_RIGHT_COLUMN_COLOR)
 
@@ -37,17 +38,17 @@ class ChatsHubFrame(ctk.CTkFrame):
     def new_conversation_button_action(self):
         address = self.address_entry.get()
         port = self.port_entry.get()
-        hub_conversation_frame = ConversationHubFrame(self.parent)
+        hub_conversation_frame = ConversationHubFrame(self.parent, "waiting for connection...")
         self.parent.set_conversation_frame(hub_conversation_frame)
-        new_conversation_handler = ConversationHandler(address, port, hub_conversation_frame, self, self.asymm_key_handler, self.session_key_handler)
+        new_conversation_handler = ConversationHandler(address, port, hub_conversation_frame, self, self.user_manager)
         new_conversation_handler.new_conversation()
 
     def connect_button_action(self):
         address = self.address_entry.get()
         port = self.port_entry.get()
-        hub_conversation_frame = ConversationHubFrame(self.parent)
+        hub_conversation_frame = ConversationHubFrame(self.parent, "waiting for connection...")
         self.parent.set_conversation_frame(hub_conversation_frame)
-        new_conversation_handler = ConversationHandler(address, port, hub_conversation_frame, self, self.asymm_key_handler, self.session_key_handler)
+        new_conversation_handler = ConversationHandler(address, port, hub_conversation_frame, self, self.user_manager)
         new_conversation_handler.connect()
 
     def log(self, text):

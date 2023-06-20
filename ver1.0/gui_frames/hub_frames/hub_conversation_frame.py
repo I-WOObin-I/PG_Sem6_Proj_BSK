@@ -6,10 +6,10 @@ from message import Message
 
 
 class ConversationHubFrame(ctk.CTkFrame):
-    def __init__(self, parent):
+    def __init__(self, parent, conversation_name="Conversation"):
         super().__init__(parent)
 
-        self.parent = parent
+        self.conversation_name = conversation_name
 
         self.configure(fg_color=cfg.HUB_MIDDLE_COLUMN_COLOR)
 
@@ -17,7 +17,7 @@ class ConversationHubFrame(ctk.CTkFrame):
         # it spreads over the whole width of the frame
         # has black background and white text
         self.conversation_title_frame = ctk.CTkFrame(self)
-        self.conversation_label = ctk.CTkLabel(self.conversation_title_frame, text="Conversation Title")
+        self.conversation_label = ctk.CTkLabel(self.conversation_title_frame, text=self.conversation_name)
         self.conversation_label.pack(fill="x")
         self.conversation_title_frame.pack(fill="x")
 
@@ -39,7 +39,7 @@ class ConversationHubFrame(ctk.CTkFrame):
         self.conversation_handler = conversation_handler
 
     def add_message(self, message_type, data, local_sender):
-        new_message = Message(message_type, data)
+        new_message = Message(message_type, self.conversation_handler.session_key_handler, data)
         outer_frame = ctk.CTkFrame(self.conversation_frame, fg_color=cfg.HUB_MIDDLE_COLUMN_COLOR)
         new_message_frame = new_message.get_frame(outer_frame)
         if local_sender:

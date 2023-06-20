@@ -8,11 +8,11 @@ CTkLabel_LENGTH = 60
 KEY_LENGTHS = [2048, 4096, 8192]
 
 class KeyGeneratorFrame(GuiFrame):
-    def __init__(self, parent, callback, asym_key_handler):
-        super().__init__(parent, callback)
+    def __init__(self, parent, callback, user_manager):
+        super().__init__(parent, callback, user_manager)
 
         self.parent = parent
-        self.asym_key_handler = asym_key_handler
+        self.asym_key_handler = user_manager.asym_key_handler
         self.key_lenght_options = self.asym_key_handler.get_key_length_options()
         self.configure(width=FRAME_WIDTH)
 

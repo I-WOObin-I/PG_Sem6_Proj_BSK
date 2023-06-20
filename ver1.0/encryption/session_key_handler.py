@@ -29,7 +29,7 @@ class sessionKeyHandler():
         pt = unpad(cipher_ECB.decrypt(ct), AES.block_size)
         return pt
 
-    def encrypt_CBC(self, data):
+    def encrypt_text_CBC(self, data):
         cipher_CBC = AES.new(self.session_key, AES.MODE_CBC)
         ct_bytes = cipher_CBC.encrypt(pad(data.encode('utf-8'), AES.block_size))
         iv = b64encode(cipher_CBC.iv).decode('utf-8')
@@ -37,7 +37,7 @@ class sessionKeyHandler():
         result = json.dumps({'iv': iv, 'ciphertext': ct})
         return result
 
-    def decrypt_CBC(self, json_input):
+    def decrypt_text_CBC(self, json_input):
         try:
             b64 = json.loads(json_input)
             iv = b64decode(b64['iv'])
@@ -48,3 +48,12 @@ class sessionKeyHandler():
         except:
             print("Error decrypting")
             return None
+
+
+    def encrypt_file_EAX(self, data):
+        cipher_EAX = AES.new(self.session_key, AES.MODE_EAX)
+        return cipher_EAX.encrypt(data)
+
+    def decrypt_file_EAX(self, data):
+        cipher_EAX = AES.new(self.session_key, AES.MODE_EAX)
+        return cipher_EAX.decrypt(data)

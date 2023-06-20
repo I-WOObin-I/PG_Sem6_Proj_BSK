@@ -6,16 +6,16 @@ PUBLIC_EXPONENT = 65537
 KEY_LENGTHS = ['2048', '4096', '8192']
 
 class asymKeyHandler():
-    def __init__(self):
+    def __init__(self, user_manager):
         self.private_key = None
         self.public_key = None
         self.guest_key = None
-        self.user_password = "1234"
-        self.user_password_hash = None
+
+        self.user_manager = user_manager
 
 
     def generate_keys(self, key_length):
-        print("Generating keys: "+ str(key_length))
+        print("Generating keys: " + str(key_length))
         self.private_key = RSA.generate(key_length, e=PUBLIC_EXPONENT)
         self.public_key = self.private_key.publickey()
 
@@ -66,7 +66,7 @@ class asymKeyHandler():
     def load_key(self, file_path):
         try:
             with open(file_path, "rb") as file:
-                key = RSA.importKey(file.read(), passphrase=self.user_password_hash)
+                key = RSA.importKey(file.read(), passphrase=self.user_manager.user_password)
                 return key
         except:
             print("Error loading key")

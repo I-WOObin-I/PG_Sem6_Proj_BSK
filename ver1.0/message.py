@@ -7,7 +7,7 @@ import config as cfg
 
 
 class Message:
-    def __init__(self, type, data=None):
+    def __init__(self, type, session_key_handler, data=None):
         self.type = type
         self.text = None
         self.file = None
@@ -18,6 +18,8 @@ class Message:
 
         self.message_frame = None
         self.progressbar = None
+
+        self.session_key_handler = session_key_handler
 
     def get_frame(self, parent_frame):
 
@@ -67,3 +69,6 @@ class Message:
 
     def finish_progressbar(self):
         self.progressbar.destroy()
+
+    def decrypt_file_EAX(self):
+        self.file = self.session_key_handler.decrypt_file_EAX(self.file)
