@@ -1,7 +1,6 @@
 import customtkinter as ctk
 
 import config
-from gui_frames import frames_list
 from gui_frames.gui_frame import GuiFrame
 from gui_frames.gui_login_frame import LoginFrame
 from user_manager import UserManager
@@ -62,6 +61,5 @@ class GuiManager(ctk.CTk):
 
 if __name__ == "__main__":
     root = GuiManager()
-    root.show_frame(frames_list.LoginFrame)
 
     root.mainloop()

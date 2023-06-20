@@ -38,8 +38,9 @@ class HubFrame(GuiFrame):
     def __init__(self, parent, callback, user_manager):
         super().__init__(parent, callback, user_manager)
 
-        self.session_key_handler = sessionKeyHandler()
-        self.asymm_key_handler = asymKeyHandler()
+        self.user_manager = user_manager
+        self.session_key_handler = self.user_manager.session_key_handler
+        self.asym_key_handler = self.user_manager.asym_key_handler
 
         self.parent = parent
         self.pack(fill="both", expand=True)
