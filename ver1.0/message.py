@@ -22,6 +22,8 @@ class Message:
 
         self.session_key_handler = session_key_handler
 
+        self.message_button = None
+
     def get_frame(self, parent_frame):
 
         if self.type == "t":
@@ -44,8 +46,8 @@ class Message:
                 return message_frame
             except:
                 message_frame = ctk.CTkFrame(parent_frame, fg_color="transparent", corner_radius=10)
-                message_button = ctk.CTkButton(message_frame, text=self.file_name, fg_color=cfg.MESSAGE_BACKGROUND_COLOR, corner_radius=10, command=self.save_file)
-                message_button.pack()
+                self.message_button = ctk.CTkButton(message_frame, text=self.file_name, fg_color=cfg.MESSAGE_BACKGROUND_COLOR, corner_radius=10, command=self.save_file)
+                self.message_button.pack()
                 self.message_frame = message_frame
                 return message_frame
 
@@ -54,7 +56,7 @@ class Message:
         if self.type == "t":
             return
 
-        file_path = ctk.filedialog.asksaveasfilename(title="Save File", filetypes=[("All Files", "*.*")])
+        file_path = ctk.filedialog.asksaveasfilename(title="Save File", initialfile=self.file_name, filetypes=[("All Files", "*.*")])
         if file_path:
             # Save the file to the chosen location
             with open(file_path, 'wb') as file:
@@ -73,3 +75,4 @@ class Message:
 
     def decrypt_file(self):
         self.file_name, self.file = self.session_key_handler.decrypt_file(self.file)
+        self.message_button.configure(text=self.file_name)

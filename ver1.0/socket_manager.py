@@ -102,6 +102,7 @@ class SocketManager:
 
         while True:
             mess_type = self.conn.recv(1)
+            self.log("packet_type len: " + str(len(mess_type)))
             if not mess_type:
                 pass
             if mess_type == b'g':
@@ -114,7 +115,7 @@ class SocketManager:
                 self.thread_receive_text()
 
             elif mess_type == b'f':
-                self.thread_receive_file()
+                self.thread_receive_file_encrypted()
 
             elif mess_type == b'x':
                 self.log("Received exit message")
@@ -219,19 +220,22 @@ class SocketManager:
         packet_len = struct.pack('I', len(data))
         packet_data = data
         packet = packet_type + packet_len + packet_data
+        self.log("packet_type len: " + str(len(packet_type)))
+        self.log("packet_len len: " + str(len(packet_len)))
+        self.log("packet_data len: " + str(len(packet_data)))
         self.conn.sendall(packet)
 
-        message.set_progressbar()
-        total_sent = 0
-
-        while total_sent < len(data):
-            sent = self.sock.send(data[total_sent:])
-            if sent == 0:
-                raise RuntimeError("socket connection broken")
-            total_sent = total_sent + sent
-            message.set_progressbar_value(sent / len(data))
-
-        message.finish_progressbar()
+        # message.set_progressbar()
+        # total_sent = 0
+        #
+        # while total_sent < len(data):
+        #     sent = self.sock.send(data[total_sent:])
+        #     if sent == 0:
+        #         raise RuntimeError("socket connection broken")
+        #     total_sent = total_sent + sent
+        #     message.set_progressbar_value(sent / len(data))
+        #
+        # message.finish_progressbar()
 
     def thread_receive_file_encrypted(self):
         self.update_conn()
@@ -239,7 +243,7 @@ class SocketManager:
 
         data_len_raw = self.conn.recv(4)
         data_len = struct.unpack('I', data_len_raw)[0]
-        self.log("data length: " + str(data_len))
+        self.log("data len: " + str(data_len))
 
         message = self.receive_callback('f', data_len)
         message.set_progressbar()
