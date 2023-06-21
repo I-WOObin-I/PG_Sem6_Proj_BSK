@@ -43,7 +43,7 @@ class asymKeyHandler():
         self.save_key(file_path, self.guest_key)
 
     def save_key(self, file_path, key):
-        encrypted_key = key.exportKey("PEM", passphrase=self.user_password_hash)
+        encrypted_key = key.exportKey("PEM", passphrase=self.user_manager.user_password)
         try:
             with open(file_path, "wb") as file:
                 file.write(encrypted_key)
@@ -53,9 +53,19 @@ class asymKeyHandler():
 
     # LOADING KEYS
     def load_public_key(self, file_path):
-        self.public_key = self.load_key(file_path)
+        try:
+            self.public_key = self.load_key(file_path)
+            return 0
+        except:
+            print("Error loading public key")
+            return 1
     def load_private_key(self, file_path):
-        self.private_key = self.load_key(file_path)
+        try:
+            self.private_key = self.load_key(file_path)
+            return 0
+        except:
+            print("Error loading private key")
+            return 1
     def load_guest_key(self, guest_public_key):
         try:
             self.guest_key = RSA.import_key(guest_public_key)
@@ -64,12 +74,10 @@ class asymKeyHandler():
 
 
     def load_key(self, file_path):
-        try:
-            with open(file_path, "rb") as file:
-                key = RSA.importKey(file.read(), passphrase=self.user_manager.user_password)
-                return key
-        except:
-            print("Error loading key")
+        with open(file_path, "rb") as file:
+            key = RSA.importKey(file.read(), passphrase=self.user_manager.user_password)
+            return key
+
 
 
 
@@ -87,7 +95,7 @@ class asymKeyHandler():
         self.user_password_hash = SHA256.new(password.encode())
 
     def get_key_length(self):
-        return int(self.public_key.n).bit_length()
+        return int(self.public_key.size_in_bits())
 
     def get_key_length_options(self):
         return KEY_LENGTHS

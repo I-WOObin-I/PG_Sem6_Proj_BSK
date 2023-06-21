@@ -55,16 +55,21 @@ class UtilityHubFrame(ctk.CTkFrame):
         file_path = ctk.filedialog.askopenfilename(title="Select Public Key File", initialfile=cfg.DEFAULT_PUBLIC_KEY_FILE_NAME, filetypes=cfg.KEY_FILE_TYPES)
         if file_path == "":
             return
-        self.asymm_key_handler.load_public_key(file_path)
-        self.public_key_loaded_label.configure(text="Public Key Loaded")
-        self.key_length_label.configure(text="Key length: " + str(self.asymm_key_handler.get_key_length()))
-
+        result = self.asymm_key_handler.load_public_key(file_path)
+        if result == 0:
+            self.public_key_loaded_label.configure(text="Public Key Loaded")
+            self.key_length_label.configure(text="Key length: " + str(self.asymm_key_handler.get_key_length()))
+        else:
+            self.public_key_loaded_label.configure(text="wrong password for key")
     def upload_priv_key_button_action(self):
         file_path = ctk.filedialog.askopenfilename(title="Select Private Key File", initialfile=cfg.DEFAULT_PRIVATE_KEY_FILE_NAME, filetypes=cfg.KEY_FILE_TYPES)
         if file_path == "":
             return
-        self.asymm_key_handler.load_private_key(file_path)
-        self.private_key_loaded_label.configure(text="Private Key Loaded")
+        result = self.asymm_key_handler.load_private_key(file_path)
+        if result == 0:
+            self.private_key_loaded_label.configure(text="Private Key Loaded")
+        else:
+            self.private_key_loaded_label.configure(text="wrong password for key")
 
     def generate_key_pair_button_action(self):
         self.parent.parent.show_frame(KeyGeneratorFrame)
